@@ -20,7 +20,7 @@
  *====================*/
 
 /* Maximal horizontal and vertical resolution to support by the library.*/
-#define LV_HOR_RES_MAX          (480)
+#define LV_HOR_RES_MAX          (240)
 #define LV_VER_RES_MAX          (320)
 
 /* Color depth:
@@ -146,7 +146,7 @@ typedef int16_t lv_coord_t;
  *==================*/
 
 /*1: Enable the Animations */
-#define LV_USE_ANIMATION        1
+#define LV_USE_ANIMATION        0
 #if LV_USE_ANIMATION
 
 /*Declare the type of the user data of animations (can be e.g. `void *`, `int`, `struct`)*/
@@ -530,6 +530,7 @@ typedef void * lv_font_user_data_t;
 typedef void * lv_obj_user_data_t;
 /*Provide a function to free user data*/
 #define LV_USE_USER_DATA 1
+#define LV_USE_USER_DATA_FREE 0
 #if LV_USE_USER_DATA_FREE
 #  define LV_USER_DATA_FREE_INCLUDE  "something.h"  /*Header for user data free function*/
 /* Function prototype : void user_data_free(lv_obj_t * obj); */
@@ -555,7 +556,7 @@ typedef void * lv_obj_user_data_t;
  */
 
 /*Arc (dependencies: -)*/
-#define LV_USE_ARC      1
+#define LV_USE_ARC      0
 
 /*Bar (dependencies: -)*/
 #define LV_USE_BAR      1
@@ -567,7 +568,7 @@ typedef void * lv_obj_user_data_t;
 #define LV_USE_BTNMATRIX     1
 
 /*Calendar (dependencies: -)*/
-#define LV_USE_CALENDAR 1
+#define LV_USE_CALENDAR 0
 #if LV_USE_CALENDAR
 #  define LV_CALENDAR_WEEK_STARTS_MONDAY    0
 #endif
@@ -579,7 +580,7 @@ typedef void * lv_obj_user_data_t;
 #define LV_USE_CHECKBOX       1
 
 /*Chart (dependencies: -)*/
-#define LV_USE_CHART    1
+#define LV_USE_CHART    0
 #if LV_USE_CHART
 #  define LV_CHART_AXIS_TICK_LABEL_MAX_LEN    256
 #endif
@@ -588,7 +589,7 @@ typedef void * lv_obj_user_data_t;
 #define LV_USE_CONT     1
 
 /*Color picker (dependencies: -*/
-#define LV_USE_CPICKER   1
+#define LV_USE_CPICKER   0
 
 /*Drop down list (dependencies: lv_page, lv_label, lv_symbol_def.h)*/
 #define LV_USE_DROPDOWN    1
@@ -630,7 +631,7 @@ typedef void * lv_obj_user_data_t;
 #endif
 
 /*LED (dependencies: -)*/
-#define LV_USE_LED      1
+#define LV_USE_LED      0
 #if LV_USE_LED
 #  define LV_LED_BRIGHT_MIN  120      /*Minimal brightness*/
 #  define LV_LED_BRIGHT_MAX  255     /*Maximal brightness*/
@@ -672,7 +673,7 @@ typedef void * lv_obj_user_data_t;
 #endif
 
 /*Preload (dependencies: lv_arc, lv_anim)*/
-#define LV_USE_SPINNER      1
+#define LV_USE_SPINNER      0
 #if LV_USE_SPINNER != 0
 #  define LV_SPINNER_DEF_ARC_LENGTH   60      /*[deg]*/
 #  define LV_SPINNER_DEF_SPIN_TIME    1000    /*[ms]*/
@@ -690,13 +691,13 @@ typedef void * lv_obj_user_data_t;
 #endif
 
 /*Slider (dependencies: lv_bar)*/
-#define LV_USE_SLIDER    1
+#define LV_USE_SLIDER    0
 
 /*Spinbox (dependencies: lv_ta)*/
-#define LV_USE_SPINBOX       1
+#define LV_USE_SPINBOX       0
 
 /*Switch (dependencies: lv_slider)*/
-#define LV_USE_SWITCH       1
+#define LV_USE_SWITCH       0
 
 /*Text area (dependencies: lv_label, lv_page)*/
 #define LV_USE_TEXTAREA       1

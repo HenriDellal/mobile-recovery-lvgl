@@ -5,7 +5,7 @@ CC ?= gcc
 LVGL_DIR_NAME ?= lvgl
 LVGL_DIR ?= ${shell pwd}
 
-WARNINGS ?= -Werror -Wall -Wextra \
+WARNINGS ?= -Wall -Wextra \
 						-Wshadow -Wundef -Wmaybe-uninitialized -Wmissing-prototypes -Wno-discarded-qualifiers \
 						-Wno-unused-function -Wno-error=strict-prototypes -Wpointer-arith -fno-strict-aliasing -Wno-error=cpp -Wuninitialized \
 						-Wno-unused-parameter -Wno-missing-field-initializers -Wno-format-nonliteral -Wno-cast-qual -Wunreachable-code -Wno-switch-default  \
@@ -14,8 +14,8 @@ WARNINGS ?= -Werror -Wall -Wextra \
             -Wtype-limits -Wsizeof-pointer-memaccess -Wpointer-arith
             
 CFLAGS ?= -O3 -g0 -I$(LVGL_DIR)/ $(WARNINGS)
-LDFLAGS ?= -lSDL2 -lm
-BIN = demo
+LDFLAGS ?= -lSDL2 -lm -lpthread
+BIN = recovery
 
 
 #Collect the files to compile
@@ -23,9 +23,6 @@ MAINSRC = ./main.c
 
 include $(LVGL_DIR)/lvgl/lvgl.mk
 include $(LVGL_DIR)/lv_drivers/lv_drivers.mk
-include $(LVGL_DIR)/lv_examples/lv_examples.mk
-
-CSRCS +=$(LVGL_DIR)/mouse_cursor_icon.c
 
 OBJEXT ?= .o
 
