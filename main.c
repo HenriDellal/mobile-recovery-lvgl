@@ -1,6 +1,11 @@
+#include "lv_drv_conf.h"
 #include "device_config.h"
 #include "lvgl/lvgl.h"
+#if USE_MONITOR
 #include "lv_drivers/display/monitor.h"
+#elif USE_FBDEV
+#include "lv_drivers/display/fbdev.h"
+#endif
 #include "lv_drivers/indev/keyboard.h"
 #include <dirent.h>
 #include <fcntl.h>
@@ -204,7 +209,7 @@ static void open_files_menu(const char * path) {
 
 void tick_thrd() {
 	for(;;) {
-#ifdef DEVICE_DEBUG
+#if USE_MONITOR
 		SDL_Delay(5);
 #else
 		usleep(5); // Sleep for 5 milliseconds
@@ -259,7 +264,11 @@ int main() {
 	// Initialize LVGL
 	lv_init();
 
+#if USE_MONITOR
 	monitor_init();
+#elif USE_FBDEV
+	fbdev_init();
+#endif
 
 	fill_arrays();
 #ifndef DEVICE_DEBUG
@@ -275,7 +284,11 @@ int main() {
 	lv_disp_drv_t disp_drv;
 	lv_disp_drv_init(&disp_drv);
 	disp_drv.buffer = &disp_buf;
+#if USE_MONITOR
 	disp_drv.flush_cb = monitor_flush;
+#elif USE_FBDEV
+	disp_drv.flush_cb = fbdev_flush;
+#endif
 	lv_disp_drv_register(&disp_drv);
 
 	lv_indev_drv_init(&kp_drv);
