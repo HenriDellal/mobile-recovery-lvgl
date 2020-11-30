@@ -1,14 +1,24 @@
 #include "lv_drv_conf.h"
 #include "device_config.h"
 #include "lvgl/lvgl.h"
+
 #if USE_MONITOR
 #include "lv_drivers/display/monitor.h"
 #elif USE_FBDEV
 #include "lv_drivers/display/fbdev.h"
 #endif
+
+#if USE_KEYBOARD
 #include "lv_drivers/indev/keyboard.h"
+#elif USE_LIBINPUT
+#include "lv_drivers/indev/libinput_drv.h"
+#elif USE_EVDEV
+#include "lv_drivers/indev/evdev.h"
+#endif
+
 #include <dirent.h>
 #include <fcntl.h>
+#include <stdio.h>
 #include <threads.h>
 #include <unistd.h>
 
@@ -63,12 +73,20 @@ static lv_obj_t * batt_label;
 static char * file_path;
 
 static bool keypad_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data) {
+#if USE_KEYBOARD
 	return keyboard_read(indev_drv, data);
+#elif USE_LIBINPUT
+	return libinput_read(indev_drv, data);
+#elif USE_EVDEV
+	return evdev_read(indev_drv, data);
+#endif
 }
 
 // Main menu event handler
 static void mm_event_handler(lv_obj_t * obj, lv_event_t ev) {
-	if (ev == LV_EVENT_RELEASED && lv_indev_get_key(kp_indev) == LV_KEY_ENTER) {
+	uint32_t key = lv_indev_get_key(kp_indev);
+	printf("mm_event: %d\n", key);
+	if (ev == LV_EVENT_RELEASED && key == LV_KEY_ENTER) {
 		char * btn_label = lv_list_get_btn_text(obj);
 		printf("%s\n", btn_label);
 		if (strcmp(btn_label, ACTION_REBOOT) == 0) {
@@ -112,6 +130,7 @@ static void open_menu(item_t * item_list, lv_event_cb_t ev_handler) {
 
 static void rm_event_handler(lv_obj_t * obj, lv_event_t ev) {
 	uint32_t key = lv_indev_get_key(kp_indev);
+	printf("rm_event: %d\n", key);
 	if (ev == LV_EVENT_RELEASED) {
 		if (key == LV_KEY_ENTER) {
 			char * btn_label = lv_list_get_btn_text(obj);
@@ -143,6 +162,7 @@ static void rm_event_handler(lv_obj_t * obj, lv_event_t ev) {
 // File list event handler
 static void fl_event_handler(lv_obj_t * obj, lv_event_t ev) {
 	uint32_t key = lv_indev_get_key(kp_indev);
+	printf("fl_event: %d\n", key);
 	if (ev == LV_EVENT_RELEASED) {
 		if (key == LV_KEY_ENTER) {
 			char * btn_txt = lv_list_get_btn_text(obj);
@@ -157,6 +177,7 @@ static void fl_event_handler(lv_obj_t * obj, lv_event_t ev) {
 
 static void script_event_handler(lv_obj_t * obj, lv_event_t ev) {
 	uint32_t key = lv_indev_get_key(kp_indev);
+	printf("scr_event: %d\n", key);
 	if (ev == LV_EVENT_RELEASED && key == LV_KEY_ENTER) {
 		lv_list_clean(options);
 		lv_obj_t * msgbox = lv_msgbox_create(lv_scr_act(), NULL);
@@ -268,6 +289,10 @@ int main() {
 	monitor_init();
 #elif USE_FBDEV
 	fbdev_init();
+#endif
+
+#if USE_EVDEV
+	evdev_init();
 #endif
 
 	fill_arrays();
