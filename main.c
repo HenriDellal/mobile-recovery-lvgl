@@ -1,12 +1,21 @@
 #include "lv_drv_conf.h"
 #include "device_config.h"
 #include "lvgl/lvgl.h"
+
 #if USE_MONITOR
 #include "lv_drivers/display/monitor.h"
 #elif USE_FBDEV
 #include "lv_drivers/display/fbdev.h"
 #endif
+
+#if USE_KEYBOARD
 #include "lv_drivers/indev/keyboard.h"
+#elif USE_LIBINPUT
+#include "lv_drivers/indev/libinput_drv.h"
+#elif USE_EVDEV
+#include "lv_drivers/indev/evdev.h"
+#endif
+
 #include <dirent.h>
 #include <fcntl.h>
 #include <threads.h>
@@ -63,7 +72,13 @@ static lv_obj_t * batt_label;
 static char * file_path;
 
 static bool keypad_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data) {
+#if USE_KEYBOARD
 	return keyboard_read(indev_drv, data);
+#elif USE_LIBINPUT
+	return libinput_read(indev_drv, data);
+#elif USE_EVDEV
+	return evdev_read(indev_drv, data);
+#endif
 }
 
 // Main menu event handler
