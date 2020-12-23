@@ -192,6 +192,18 @@ static void script_event_handler(lv_obj_t * obj, lv_event_t ev) {
 	}
 }
 
+static void scroll_list_handler(lv_obj_t * obj, lv_event_t ev) {
+	uint32_t key = lv_indev_get_key(kp_indev);
+	printf("scroll_list_event: %d\n", key);
+	if (ev == LV_EVENT_PRESSED) {
+		if (key == LV_KEY_UP || key == LV_KEY_RIGHT || key == LV_KEY_NEXT) {
+			lv_list_up(obj);
+		} else if (key == LV_KEY_DOWN || key == LV_KEY_LEFT || key == LV_KEY_PREV) {
+			lv_list_down(obj);
+		}
+	}
+}
+
 static void open_files_menu(const char * path) {
 	lv_list_clean(options);
 	lv_obj_t * list_btn;
@@ -357,6 +369,7 @@ int main() {
 	lv_task_create(batt_mon, 2000, LV_TASK_PRIO_LOW, NULL);
 
 	open_menu(mm_item, mm_event_handler);
+	lv_obj_set_event_cb(options, scroll_list_handler);
 	// Sleep forever
 	for(;;)
 		usleep(5000);
